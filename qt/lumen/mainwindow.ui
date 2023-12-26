@@ -34,6 +34,7 @@
     </item>
    </layout>
   </widget>
+  <widget class="QStatusBar" name="statusbar"/>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
     <rect>
@@ -47,10 +48,33 @@
     <property name="title">
      <string>Connection</string>
     </property>
+    <widget class="QMenu" name="menuCOM_Ports">
+     <property name="title">
+      <string>COM Ports</string>
+     </property>
+     <addaction name="actionTest"/>
+    </widget>
+    <widget class="QMenu" name="menuBit_Rates">
+     <property name="title">
+      <string>Bit Rates</string>
+     </property>
+     <addaction name="actionBit_Rates_2"/>
+    </widget>
+    <addaction name="menuCOM_Ports"/>
+    <addaction name="menuBit_Rates"/>
    </widget>
    <addaction name="menuConnection"/>
   </widget>
-  <widget class="QStatusBar" name="statusbar"/>
+  <action name="actionTest">
+   <property name="text">
+    <string>Available COM Ports</string>
+   </property>
+  </action>
+  <action name="actionBit_Rates_2">
+   <property name="text">
+    <string>Bit Rates</string>
+   </property>
+  </action>
  </widget>
  <resources/>
  <connections/>

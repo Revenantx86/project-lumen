@@ -25,6 +25,9 @@ public:
 
 private:
     Ui::MainWindow *ui;
+
+    // Connection functions
     void populateCOMPorts();
+    void populateBitRates();
 };
 #endif // MAINWINDOW_H
