@@ -11,9 +11,29 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>MainWindow</string>
+   <string>Lumen Logger</string>
   </property>
-  <widget class="QWidget" name="centralwidget"/>
+  <widget class="QWidget" name="centralwidget">
+   <layout class="QGridLayout" name="gridLayout">
+    <item row="0" column="0">
+     <widget class="QTabWidget" name="tabWidget">
+      <property name="currentIndex">
+       <number>0</number>
+      </property>
+      <widget class="QWidget" name="table">
+       <attribute name="title">
+        <string>Table</string>
+       </attribute>
+      </widget>
+      <widget class="QWidget" name="graph">
+       <attribute name="title">
+        <string>Graph</string>
+       </attribute>
+      </widget>
+     </widget>
+    </item>
+   </layout>
+  </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
     <rect>
@@ -23,6 +43,12 @@
      <height>24</height>
     </rect>
    </property>
+   <widget class="QMenu" name="menuConnection">
+    <property name="title">
+     <string>Connection</string>
+    </property>
+   </widget>
+   <addaction name="menuConnection"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
  </widget>

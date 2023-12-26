@@ -2,6 +2,12 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+//Serial Port Lib
+#include <qserialport.h>
+#include <QSerialPortInfo>
+//Menu bar lib
+#include <QMenu>
+#include <QMenuBar>
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -19,5 +25,6 @@ public:
 
 private:
     Ui::MainWindow *ui;
+    void populateCOMPorts();
 };
 #endif // MAINWINDOW_H
