@@ -62,17 +62,24 @@
     </widget>
     <addaction name="menuCOM_Ports"/>
     <addaction name="menuBit_Rates"/>
+    <addaction name="separator"/>
+    <addaction name="actionconnect"/>
    </widget>
    <addaction name="menuConnection"/>
   </widget>
+  <action name="actionBit_Rates_2">
+   <property name="text">
+    <string>Bit Rates</string>
+   </property>
+  </action>
   <action name="actionTest">
    <property name="text">
     <string>Available COM Ports</string>
    </property>
   </action>
-  <action name="actionBit_Rates_2">
+  <action name="actionconnect">
    <property name="text">
-    <string>Bit Rates</string>
+    <string>connect</string>
    </property>
   </action>
  </widget>

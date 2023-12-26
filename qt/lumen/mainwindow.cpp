@@ -44,6 +44,12 @@ void MainWindow::populateCOMPorts()
     foreach (const QSerialPortInfo &info, QSerialPortInfo::availablePorts()) {
         comPortMenu->addAction(info.portName());
     }
+
+    foreach (QAction *action, comPortMenu->actions()) {
+        connect(action, &QAction::triggered, this, [this, action]() {
+            updateStatusBar(action);
+        });
+    }
 }
 
 // Initializing the bitrates available for connection
@@ -57,6 +63,7 @@ void MainWindow::populateBitRates()
     }
     */
 
+    qDebug() << "listing Bit Rates";
     QMenu *parentmenu = this->findChild<QMenu*>("menuConnection");
 
     // Create 'Bit Rates' submenu
@@ -72,4 +79,40 @@ void MainWindow::populateBitRates()
     for (int rate : bitRates) {
         bitRateMenu->addAction(QString::number(rate));
     }
+
+    foreach (QAction *action, bitRateMenu->actions()) {
+        connect(action, &QAction::triggered, this, [this, action]() {
+            updateStatusBar(action);
+        });
+    }
 }
+
+// Connect
+void MainWindow::on_actionconnect_triggered()
+{
+    QSerialPort serial;
+    serial.setPortName(selectedCOMPort);
+    serial.setBaudRate(selectedBitRate);
+
+    if (serial.open(QIODevice::ReadWrite)) {
+        // Connection successful
+        statusBar()->showMessage("Connected to " + selectedCOMPort + " at " + QString::number(selectedBitRate) + " baud");
+    } else {
+        // Connection failed
+        statusBar()->showMessage("Failed to connect to " + selectedCOMPort);
+    }
+}
+
+// --- Status Bar Functions --- //
+void MainWindow::updateStatusBar(QAction *action)
+{
+    if (action) {
+        qDebug() << " Action Triggerd";
+        statusBar()->showMessage(action->text());
+
+    }
+
+}
+
+
+

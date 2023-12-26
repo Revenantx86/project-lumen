@@ -23,11 +23,24 @@ public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
+private slots:
+    void updateStatusBar(QAction *action);
+
+    void on_actionconnect_triggered();
+
 private:
     Ui::MainWindow *ui;
 
     // Connection functions
     void populateCOMPorts();
     void populateBitRates();
+
+
+    // Private variables
+    QSerialPort serial;
+
+    QString selectedCOMPort = "/dev/tty.usbmodem1101";
+    int selectedBitRate =9600;
+
 };
 #endif // MAINWINDOW_H
