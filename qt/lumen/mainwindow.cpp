@@ -8,14 +8,19 @@ MainWindow::MainWindow(QWidget *parent)
     ui->setupUi(this);
 
     //Startup Menu Initialization
-
     populateCOMPorts();
     populateBitRates();
+    serialBuffer = "";
+
+    // Initalize Tabs
+    setupChart();
+
 }
 
 MainWindow::~MainWindow()
 {
     delete ui;
+    disconnectArduino();
 }
 
 
@@ -90,13 +95,18 @@ void MainWindow::populateBitRates()
 // Connect
 void MainWindow::on_actionconnect_triggered()
 {
-    QSerialPort serial;
     serial.setPortName(selectedCOMPort);
-    serial.setBaudRate(selectedBitRate);
+    serial.setBaudRate(QSerialPort::Baud9600);
+    //serial.setDataBits(QSerialPort::Data8);
+    //serial.setFlowControl(QSerialPort::NoFlowControl);
+    //serial.setParity(QSerialPort::NoParity);
+    //serial.setStopBits(QSerialPort::OneStop);
 
-    if (serial.open(QIODevice::ReadWrite)) {
+    if (serial.open(QIODevice::ReadOnly)) {
         // Connection successful
         statusBar()->showMessage("Connected to " + selectedCOMPort + " at " + QString::number(selectedBitRate) + " baud");
+        //serial.write("\n");
+        connect(&serial, &QSerialPort::readyRead, this, &MainWindow::readFromPort);
     } else {
         // Connection failed
         statusBar()->showMessage("Failed to connect to " + selectedCOMPort);
@@ -114,5 +124,48 @@ void MainWindow::updateStatusBar(QAction *action)
 
 }
 
+// --- Serial Functions --- //
+
+void MainWindow::readFromPort()
+{
+    QStringList buffer_split = serialBuffer.split(","); //  split the serialBuffer string, parsing with ',' as the separator
+    if(buffer_split.length() < 3){
+        serialData = serial.readAll();
+        serialBuffer += QString::fromStdString(serialData.toStdString());
+        serialData.clear();
+    }
+    else
+    {
+        serialBuffer = "";
+        qDebug() << buffer_split << "\n";
+    }
+    //qDebug() << serialBuffer;
+    statusBar()->showMessage(serialBuffer);
+}
+
+void MainWindow::disconnectArduino()
+{
+    if (serial.isOpen()) {
+        serial.close();
+        statusBar()->showMessage("Disconnected from " + selectedCOMPort);
+    }
+}
+
+// --- Chart Functions --- //
+void MainWindow::setupChart()
+{
+
+    QLineSeries *series = new QLineSeries();
+    series->append(2,6);
+    series->append(4,8);
 
 
+    QChart *chart = new QChart();
+    //chart->legend()->hide();
+    chart->addSeries(series);
+    chart->setTitle("Lumen logger chart");
+
+    QChartView *chartView = new QChartView(chart);
+    chartView->setRenderHint(QPainter::Antialiasing);
+    chartView->setParent(this->ui->graphicsView);
+}
