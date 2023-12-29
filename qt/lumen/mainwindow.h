@@ -10,6 +10,8 @@
 #include <QMenu>
 #include <QMenuBar>
 #include <QtCharts>
+#include <QElapsedTimer>
+#include <QTime>
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -38,18 +40,21 @@ private:
     // Connection functions
     void populateCOMPorts();
     void populateBitRates();
-    void disconnectArduino();
+    void disconnectArduino();  
 
     //Graph Function
     void setupChart();
+    void updateChart(int value);
 
     // Private variables
     QSerialPort serial;
 
-    QString selectedCOMPort = "/dev/tty.usbmodem21101";
+    QString selectedCOMPort = "/dev/tty.usbmodem1101";
     int selectedBitRate =9600;
     QByteArray serialData;
     QString serialBuffer;
+
+    int counter;
 
 };
 #endif // MAINWINDOW_H

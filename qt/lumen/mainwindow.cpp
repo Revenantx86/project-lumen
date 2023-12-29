@@ -137,6 +137,7 @@ void MainWindow::readFromPort()
     else
     {
         serialBuffer = "";
+        updateChart(buffer_split[0].toInt());
         qDebug() << buffer_split << "\n";
     }
     //qDebug() << serialBuffer;
@@ -154,18 +155,33 @@ void MainWindow::disconnectArduino()
 // --- Chart Functions --- //
 void MainWindow::setupChart()
 {
+    ui->customPlot->addGraph(); // blue line
+    ui->customPlot->graph(0)->setPen(QPen(QColor(40, 110, 255)));
+    ui->customPlot->addGraph(); // red line
+    ui->customPlot->graph(1)->setPen(QPen(QColor(255, 110, 40)));
 
-    QLineSeries *series = new QLineSeries();
-    series->append(2,6);
-    series->append(4,8);
+    QSharedPointer<QCPAxisTickerTime> timeTicker(new QCPAxisTickerTime);
+    timeTicker->setTimeFormat("%h:%m:%s");
+    ui->customPlot->xAxis->setTicker(timeTicker);
+    ui->customPlot->axisRect()->setupFullAxesBox();
+    ui->customPlot->yAxis->setRange(0, 1000);
 
-
-    QChart *chart = new QChart();
-    //chart->legend()->hide();
-    chart->addSeries(series);
-    chart->setTitle("Lumen logger chart");
-
-    QChartView *chartView = new QChartView(chart);
-    chartView->setRenderHint(QPainter::Antialiasing);
-    chartView->setParent(this->ui->graphicsView);
+    // make left and bottom axes transfer their ranges to right and top axes:
+    connect(ui->customPlot->xAxis, SIGNAL(rangeChanged(QCPRange)), ui->customPlot->xAxis2, SLOT(setRange(QCPRange)));
+    connect(ui->customPlot->yAxis, SIGNAL(rangeChanged(QCPRange)), ui->customPlot->yAxis2, SLOT(setRange(QCPRange)));
+    counter = 0;
 }
+
+void MainWindow::updateChart(int value)
+{
+
+    ui->customPlot->graph(0)->addData(counter, value);
+    counter++;
+    // make key axis range scroll with the data (at a constant range size of 8):
+    ui->customPlot->xAxis->setRange(counter, 100, Qt::AlignRight);
+    ui->customPlot->replot();
+
+}
+
+
+
